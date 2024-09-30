@@ -4,6 +4,7 @@
 import pygame
 from pygame.locals import *
 import sys
+import utils
 
 # Initialise libraries
 pygame.init()
@@ -30,13 +31,15 @@ REF3 - Draw. Render display items to the screen
 REF4 - Update. Refresh screen and tick clocks.
 """
 running = True
-v_location, h_location = 100, 100
+v_location, h_location = 50, 50
 player_speed = 1
 cycle_num = 0  # This is used to prevent spamming of commands
+STD_INP_BUFFER = 15  # Puts a buffer of 15 cycles on chosen inputs (0.25 seconds)
+last_update = -STD_INP_BUFFER  # Last cycle in which the speed was updated, initially -buffer to negate start buffer
 while running:
     cycle_num += 1
     
-    # Setablish movement variables
+    # Establish movement variables
     v_movement, h_movement = 0, 0
     # Event loop (REF1)
     for event in pygame.event.get():
@@ -63,15 +66,18 @@ while running:
     v_location += v_movement
 
     # Update player speed if 1 or 2 are pressed
-    if keys[K_1]:
-        player_speed -= 1
-    if keys[K_2]:
-        player_speed += 1
-
+    if cycle_num >= last_update + STD_INP_BUFFER:
+        if keys[K_1]:
+            player_speed -= 1
+            last_update = cycle_num
+        if keys[K_2]:
+            player_speed += 1
+            last_update = cycle_num
 
     # Draw (REF3)
     WINDOW.fill(RED)
-    pygame.draw.rect(WINDOW, GREEN, (h_location, v_location, 100, 100))
+    coords = (h_location, v_location)
+    pygame.draw.rect(WINDOW, GREEN, (*utils.pe2pi(display_inf, coords), 100, 100))
 
     # Update (REF4)
     FPS_CLOCK.tick(FRAME_RATE)
