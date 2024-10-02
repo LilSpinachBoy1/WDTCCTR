@@ -38,7 +38,7 @@ cycle_num = 0  # This is used to prevent spamming of commands
 STD_INP_BUFFER = 15  # Puts a buffer of 15 cycles on chosen inputs (0.25 seconds)
 last_update = -STD_INP_BUFFER  # Last cycle in which the speed was updated, initially -buffer to negate start buffer
 
-enemy_1 = utils.Enemy(100, 80)
+enemy_1 = utils.Enemy(25, 75)
 while running:
     cycle_num += 1
     coords = (h_location, v_location)
@@ -81,9 +81,13 @@ while running:
             last_update = cycle_num
 
     # COLLISION LOGIC
-    is_finished = player_rect.colliderect(finish_rect)
-    if is_finished:
+    is_finished = player_rect.colliderect(finish_rect)  # Player vs finish
+    is_hit_enemy1 = enemy_1.check_collide(player_rect)  # Player vs enemy1
+    if is_finished or is_hit_enemy1:
         pygame.event.post(pygame.event.Event(QUIT))
+
+    # Update Enemies
+    enemy_1.process_move(1)
 
     # Draw (REF3)
     WINDOW.fill(BLACK)
