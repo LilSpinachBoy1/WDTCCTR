@@ -18,6 +18,14 @@ def pe2pi(screen_data, percent: tuple) -> tuple:
     return int(width), int(height)
 
 
+def pe2piSINGLE(screen_data, percent: float, is_width: bool) -> int:
+    if is_width:
+        x = screen_data.current_w
+    else:
+        x = screen_data.current_h
+    return int(x * percent * 0.01)
+
+
 def pi2pe(screen_data, pixels: tuple) -> tuple:
     """ Function to convert exact pixel coordinates to percentages
 
@@ -31,12 +39,21 @@ def pi2pe(screen_data, pixels: tuple) -> tuple:
     return int(width), int(height)
 
 
+def pi2peSINGLE(screen_data, pixels: int, is_width: bool) -> float:
+    if is_width:
+        x = screen_data.current_w
+    else:
+        x = screen_data.current_h
+    return float(x * pixels * 0.01)
+
+
 class Enemy:
     def __init__(self, start_y):
-        self.rect = pygame.Rect(50, start_y, 50, 50)
+        self.coords = (10, start_y)
+        self.rect = pygame.Rect(*self.coords, 50, 50)
 
     def process_move(self):
-            pass  # Finish this later
+        pass  # Finish this later
 
     def update(self, SURF, COLOUR):
         pygame.draw.rect(SURF, COLOUR, self.rect)
@@ -45,4 +62,3 @@ class Enemy:
 # TEST HERE
 if __name__ == "__main__":
     pass
-

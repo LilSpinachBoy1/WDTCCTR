@@ -42,8 +42,8 @@ enemy_1 = utils.Enemy(100)
 while running:
     cycle_num += 1
     coords = (h_location, v_location)
-    player_rect = pygame.Rect(*utils.pe2pi(display_inf, coords), 100, 100)
-    finish_rect = pygame.Rect(*utils.pe2pi(display_inf, (20, 0)), 1200, 100)
+    player_rect = pygame.Rect(*utils.pe2pi(display_inf, coords), utils.pe2piSINGLE(display_inf, 5, True), utils.pe2piSINGLE(display_inf, 5, True))
+    finish_rect = pygame.Rect(*utils.pe2pi(display_inf, (20, 0)), *utils.pe2pi(display_inf, (60, 10)))
 
     # Establish movement variables
     v_movement, h_movement = 0, 0
