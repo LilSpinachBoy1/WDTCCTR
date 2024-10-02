@@ -5,6 +5,7 @@ import pygame
 from pygame.locals import *
 import sys
 import utils
+from utils import pe2pi
 
 # Initialise libraries
 pygame.init()
@@ -31,14 +32,19 @@ REF3 - Draw. Render display items to the screen
 REF4 - Update. Refresh screen and tick clocks.
 """
 running = True
-v_location, h_location = 50, 50
+v_location, h_location = 90, 45  # THESE VALUES SHOULD BE PERCENTAGES
 player_speed = 1
 cycle_num = 0  # This is used to prevent spamming of commands
 STD_INP_BUFFER = 15  # Puts a buffer of 15 cycles on chosen inputs (0.25 seconds)
 last_update = -STD_INP_BUFFER  # Last cycle in which the speed was updated, initially -buffer to negate start buffer
+
+enemy_1 = utils.Enemy(100)
 while running:
     cycle_num += 1
-    
+    coords = (h_location, v_location)
+    player_rect = pygame.Rect(*utils.pe2pi(display_inf, coords), 100, 100)
+    finish_rect = pygame.Rect(*utils.pe2pi(display_inf, (20, 0)), 1200, 100)
+
     # Establish movement variables
     v_movement, h_movement = 0, 0
     # Event loop (REF1)
@@ -74,11 +80,22 @@ while running:
             player_speed += 1
             last_update = cycle_num
 
+    # COLLISION LOGIC
+    is_finished = player_rect.colliderect(finish_rect)
+    if is_finished:
+        pygame.event.post(pygame.event.Event(QUIT))
+
     # Draw (REF3)
-    WINDOW.fill(RED)
-    coords = (h_location, v_location)
-    pygame.draw.rect(WINDOW, GREEN, (*utils.pe2pi(display_inf, coords), 100, 100))
+    WINDOW.fill(BLACK)
+
+    # Draw the target and enemies
+    pygame.draw.rect(WINDOW, GREEN, finish_rect)
+    enemy_1.update(WINDOW, RED)
+
+    # Draw the character
+    pygame.draw.rect(WINDOW, BLUE, player_rect)
 
     # Update (REF4)
     FPS_CLOCK.tick(FRAME_RATE)
     pygame.display.update()
+    

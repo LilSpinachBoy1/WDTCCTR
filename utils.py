@@ -2,6 +2,8 @@
 Contains useful functions for pygame
 """
 
+import pygame
+
 
 def pe2pi(screen_data, percent: tuple) -> tuple:
     """Function to convert percentage screen values to pixels
@@ -29,6 +31,18 @@ def pi2pe(screen_data, pixels: tuple) -> tuple:
     return int(width), int(height)
 
 
+class Enemy:
+    def __init__(self, start_y):
+        self.rect = pygame.Rect(50, start_y, 50, 50)
+
+    def process_move(self):
+            pass  # Finish this later
+
+    def update(self, SURF, COLOUR):
+        pygame.draw.rect(SURF, COLOUR, self.rect)
+
+
 # TEST HERE
 if __name__ == "__main__":
     pass
+
