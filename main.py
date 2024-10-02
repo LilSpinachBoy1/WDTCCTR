@@ -38,12 +38,12 @@ cycle_num = 0  # This is used to prevent spamming of commands
 STD_INP_BUFFER = 15  # Puts a buffer of 15 cycles on chosen inputs (0.25 seconds)
 last_update = -STD_INP_BUFFER  # Last cycle in which the speed was updated, initially -buffer to negate start buffer
 
-enemy_1 = utils.Enemy(100)
+enemy_1 = utils.Enemy(100, 80)
 while running:
     cycle_num += 1
     coords = (h_location, v_location)
-    player_rect = pygame.Rect(*utils.pe2pi(display_inf, coords), utils.pe2piSINGLE(display_inf, 5, True), utils.pe2piSINGLE(display_inf, 5, True))
-    finish_rect = pygame.Rect(*utils.pe2pi(display_inf, (20, 0)), *utils.pe2pi(display_inf, (60, 10)))
+    player_rect = pygame.Rect(*utils.pe2pi(coords), utils.pe2piSINGLE(5, True), utils.pe2piSINGLE(5, True))
+    finish_rect = pygame.Rect(*utils.pe2pi((20, 0)), *utils.pe2pi((60, 10)))
 
     # Establish movement variables
     v_movement, h_movement = 0, 0
