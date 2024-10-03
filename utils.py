@@ -73,6 +73,23 @@ class Enemy:
         pygame.draw.rect(SURF, COLOUR, self.rect)
 
 
+#TODO: Position logic doesnt work
+class Text:
+    def __init__(self, text: str, size: int, pos: tuple) -> None:
+        self.font = pygame.font.Font(None, size)  # Use default font
+        self.text_surface = self.font.render(text, True, pygame.Color('white'))
+        self.text_rect = self.text_surface.get_rect()
+        self.pos = pe2pi(pos)
+        self.text_rect.center = self.pos
+
+    def update_text(self, new_text: str) -> None:
+        self.text_surface = self.font.render(new_text, True, pygame.Color('white'))
+        self.text_rect = self.text_surface.get_rect()
+
+    def output(self, surface: pygame.Surface) -> None:
+        surface.blit(self.text_surface, self.text_rect)
+
+
 # TEST HERE
 if __name__ == "__main__":
     pass

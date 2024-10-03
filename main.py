@@ -39,8 +39,10 @@ STD_INP_BUFFER = 15  # Puts a buffer of 15 cycles on chosen inputs (0.25 seconds
 last_update = -STD_INP_BUFFER  # Last cycle in which the speed was updated, initially -buffer to negate start buffer
 
 enemy_1 = utils.Enemy(25, 75)
+cycle_count_text = utils.Text("placeholder", 100, (10, 50))
 while running:
     cycle_num += 1
+    seconds = cycle_num // FRAME_RATE
     coords = (h_location, v_location)
     player_rect = pygame.Rect(*utils.pe2pi(coords), utils.pe2piSINGLE(5, True), utils.pe2piSINGLE(5, True))
     finish_rect = pygame.Rect(*utils.pe2pi((20, 0)), *utils.pe2pi((60, 10)))
@@ -86,15 +88,17 @@ while running:
     if is_finished or is_hit_enemy1:
         pygame.event.post(pygame.event.Event(QUIT))
 
-    # Update Enemies
+    # Update Enemies and Text
     enemy_1.process_move(1)
+    cycle_count_text.update_text(f"Time: {str(seconds)}")
 
     # Draw (REF3)
     WINDOW.fill(BLACK)
 
-    # Draw the target and enemies
+    # Draw the target, enemies and text
     pygame.draw.rect(WINDOW, GREEN, finish_rect)
     enemy_1.update(WINDOW, RED)
+    cycle_count_text.output(WINDOW)
 
     # Draw the character
     pygame.draw.rect(WINDOW, BLUE, player_rect)
