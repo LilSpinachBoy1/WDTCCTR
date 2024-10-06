@@ -39,7 +39,7 @@ STD_INP_BUFFER = 15  # Puts a buffer of 15 cycles on chosen inputs (0.25 seconds
 last_update = -STD_INP_BUFFER  # Last cycle in which the speed was updated, initially -buffer to negate start buffer
 
 enemy_1 = utils.Enemy(25, 75)
-cycle_count_text = utils.Text("placeholder", 100, (10, 50))
+cycle_count_text = utils.Text("placeholder", 100, (2, 2))
 while running:
     cycle_num += 1
     seconds = cycle_num // FRAME_RATE
