@@ -5,7 +5,6 @@ import pygame
 from pygame.locals import *
 import sys
 import utils
-from utils import pe2pi
 
 # Initialise libraries
 pygame.init()
@@ -38,14 +37,14 @@ cycle_num = 0  # This is used to prevent spamming of commands
 STD_INP_BUFFER = 15  # Puts a buffer of 15 cycles on chosen inputs (0.25 seconds)
 last_update = -STD_INP_BUFFER  # Last cycle in which the speed was updated, initially -buffer to negate start buffer
 
-enemy_1 = utils.Enemy(25, 75)
-cycle_count_text = utils.Text("placeholder", 100, (2, 2))
+enemy_1 = utils.enemies.Enemy(25, 75)
+cycle_count_text = utils.text.Text("placeholder", 100, (2, 2))
 while running:
     cycle_num += 1
     seconds = cycle_num // FRAME_RATE
     coords = (h_location, v_location)
-    player_rect = pygame.Rect(*utils.pe2pi(coords), utils.pe2piSINGLE(5, True), utils.pe2piSINGLE(5, True))
-    finish_rect = pygame.Rect(*utils.pe2pi((20, 0)), *utils.pe2pi((60, 10)))
+    player_rect = pygame.Rect(*utils.conversions.pe2pi(coords), utils.conversions.pe2piSINGLE(5, True), utils.conversions.pe2piSINGLE(5, True))
+    finish_rect = pygame.Rect(*utils.conversions.pe2pi((20, 0)), *utils.conversions.pe2pi((60, 10)))
 
     # Establish movement variables
     v_movement, h_movement = 0, 0
