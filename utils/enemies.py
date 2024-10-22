@@ -4,9 +4,9 @@ pygame.init()
 
 
 class Enemy:
-    def __init__(self, start_y: int, move_range_pcnt: int) -> None:
+    def __init__(self, start_y: int, move_range_pcnt: int, move_offset_pcnt: int = 0) -> None:
         self.move_cap = 10 + move_range_pcnt
-        self.coords = [10, start_y]  # Written in percentages
+        self.coords = [10 + move_offset_pcnt, start_y]  # Written in percentages
         self.direction = 1
         self.rect = pygame.Rect(*utils.conversions.pe2pi(self.coords), utils.conversions.pe2piSINGLE(5, True), utils.conversions.pe2piSINGLE(5, True))
 
@@ -23,7 +23,7 @@ class Enemy:
     def check_collide(self, player) -> bool:
         return self.rect.colliderect(player)
 
-    def update(self, SURF: pygame.Surface, COLOUR: tuple) -> None:
+    def update(self, SURF: pygame.Surface, COLOUR: tuple = (255, 0, 0)) -> None:
         self.rect = pygame.Rect(*utils.conversions.pe2pi(self.coords), utils.conversions.pe2piSINGLE(5, True), utils.conversions.pe2piSINGLE(5, True))
         pygame.draw.rect(SURF, COLOUR, self.rect)
         

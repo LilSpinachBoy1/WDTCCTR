@@ -19,7 +19,6 @@ BLUE = (0, 0, 255)
 # Create a window and clock
 FPS_CLOCK = pygame.time.Clock()
 FRAME_RATE = 60
-# This way is good because it does not change the resolution of the screen but still goes fullscreen
 display_inf = pygame.display.Info()
 WINDOW = pygame.display.set_mode((display_inf.current_w, display_inf.current_h))
 
@@ -38,6 +37,7 @@ STD_INP_BUFFER = 15  # Puts a buffer of 15 cycles on chosen inputs (0.25 seconds
 last_update = -STD_INP_BUFFER  # Last cycle in which the speed was updated, initially -buffer to negate start buffer
 
 enemy_1 = utils.enemies.Enemy(25, 75)
+enemy_2 = utils.enemies.Enemy(50, 75, 10)
 cycle_count_text = utils.text.Text("placeholder", 100, (2, 2))
 while running:
     cycle_num += 1
@@ -72,23 +72,16 @@ while running:
     h_location += h_movement
     v_location += v_movement
 
-    # Update player speed if 1 or 2 are pressed
-    if cycle_num >= last_update + STD_INP_BUFFER:
-        if keys[K_1]:
-            player_speed -= 1
-            last_update = cycle_num
-        if keys[K_2]:
-            player_speed += 1
-            last_update = cycle_num
-
     # COLLISION LOGIC
     is_finished = player_rect.colliderect(finish_rect)  # Player vs finish
     is_hit_enemy1 = enemy_1.check_collide(player_rect)  # Player vs enemy1
-    if is_finished or is_hit_enemy1:
+    is_hit_enemy2 = enemy_2.check_collide(player_rect)
+    if is_finished or is_hit_enemy1 or is_hit_enemy2:
         pygame.event.post(pygame.event.Event(QUIT))
 
     # Update Enemies and Text
     enemy_1.process_move(1)
+    enemy_2.process_move(1)
     cycle_count_text.update_text(f"Time: {str(seconds)}")
 
     # Draw (REF3)
@@ -96,7 +89,8 @@ while running:
 
     # Draw the target, enemies and text
     pygame.draw.rect(WINDOW, GREEN, finish_rect)
-    enemy_1.update(WINDOW, RED)
+    enemy_1.update(WINDOW)
+    enemy_2.update(WINDOW)
     cycle_count_text.output(WINDOW)
 
     # Draw the character
