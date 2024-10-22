@@ -1,5 +1,5 @@
 import pygame
-import conversions
+import utils.conversions
 pygame.init()
 
 
@@ -8,7 +8,7 @@ class Enemy:
         self.move_cap = 10 + move_range_pcnt
         self.coords = [10, start_y]  # Written in percentages
         self.direction = 1
-        self.rect = pygame.Rect(*conversions.pe2pi(self.coords), conversions.pe2piSINGLE(5, True), conversions.pe2piSINGLE(5, True))
+        self.rect = pygame.Rect(*utils.conversions.pe2pi(self.coords), utils.conversions.pe2piSINGLE(5, True), utils.conversions.pe2piSINGLE(5, True))
 
     def process_move(self, speed: int) -> None:
         # Move the enemy based on the current direction
@@ -24,6 +24,6 @@ class Enemy:
         return self.rect.colliderect(player)
 
     def update(self, SURF: pygame.Surface, COLOUR: tuple) -> None:
-        self.rect = pygame.Rect(*conversions.pe2pi(self.coords), conversions.pe2piSINGLE(5, True), conversions.pe2piSINGLE(5, True))
+        self.rect = pygame.Rect(*utils.conversions.pe2pi(self.coords), utils.conversions.pe2piSINGLE(5, True), utils.conversions.pe2piSINGLE(5, True))
         pygame.draw.rect(SURF, COLOUR, self.rect)
         
