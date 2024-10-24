@@ -39,12 +39,16 @@ last_update = -STD_INP_BUFFER  # Last cycle in which the speed was updated, init
 enemy_1 = utils.enemies.Enemy(25, 75)
 enemy_2 = utils.enemies.Enemy(50, 75, 10)
 cycle_count_text = utils.text.Text("placeholder", 100, (2, 2))
+finish_rect = pygame.Rect(*utils.conversions.pe2pi((20, 0)), *utils.conversions.pe2pi((60, 10)))
+std_rects = [finish_rect]
 while running:
     cycle_num += 1
     seconds = cycle_num // FRAME_RATE
     coords = (h_location, v_location)
-    player_rect = pygame.Rect(*utils.conversions.pe2pi(coords), utils.conversions.pe2piSINGLE(5, True), utils.conversions.pe2piSINGLE(5, True))
-    finish_rect = pygame.Rect(*utils.conversions.pe2pi((20, 0)), *utils.conversions.pe2pi((60, 10)))
+    player_rect = pygame.Rect(*utils.conversions.pe2pi(coords), utils.conversions.pe2piSINGLE(5, True),
+                              utils.conversions.pe2piSINGLE(5, True))
+    if player_rect not in std_rects:
+        std_rects.append(player_rect)
 
     # Establish movement variables
     v_movement, h_movement = 0, 0
@@ -69,8 +73,12 @@ while running:
     if keys[K_s]:
         v_movement = player_speed
 
-    h_location += h_movement
-    v_location += v_movement
+    # h_location += h_movement
+    # v_location += v_movement
+
+    # Move everything else
+    for obj in std_rects:
+        obj.move(-h_movement, -v_movement)
 
     # COLLISION LOGIC
     is_finished = player_rect.colliderect(finish_rect)  # Player vs finish
