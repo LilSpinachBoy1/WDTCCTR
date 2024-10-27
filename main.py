@@ -14,8 +14,7 @@ class SceneManager:
         self.curr_scene = "0 - Menu"
         self.quit = False
 
-    @staticmethod
-    def scn0_menu():
+    def scn0_menu(self):
         FPS = 60
         clock = pygame.time.Clock()
         running = True
@@ -23,19 +22,22 @@ class SceneManager:
         while running:
             # EVENT LOOP
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT:  # If app closed
                     pygame.quit()
                     sys.exit()
 
             # Check Key Presses
             pressed = pygame.key.get_pressed()
             if pressed[pygame.K_ESCAPE]:
-                pygame.event.post(pygame.event.Event(pygame.QUIT))
+                running = False
+                self.quit = True  # Set to true so the program ends!
 
             # Update display
             window.fill((255, 255, 255))
             pygame.display.update()
             clock.tick(FPS)
+
+        print("Left loop")
 
     def scene_runner(self):
         while not self.quit:
