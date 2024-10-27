@@ -1,3 +1,4 @@
+from Modules import ui
 import sys
 import pygame
 pygame.init()
@@ -12,12 +13,14 @@ pygame.display.set_caption('How it feels to chew 5 gum')
 class SceneManager:
     def __init__(self):
         self.curr_scene = "0 - Menu"
+        pygame.display.set_caption("MAIN MENU")
         self.quit = False
 
     def scn0_menu(self):
         FPS = 60
         clock = pygame.time.Clock()
         running = True
+        test_text = ui.Text("Heyyyy", 50, (10, 10))
         # SCENE LOOP
         while running:
             # EVENT LOOP
