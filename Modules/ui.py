@@ -1,12 +1,19 @@
 """
 UI MODULE: Holds classes for useful assets like text and buttons
 """
+# Import myyyyy stuff
+import conversions
+
 # Setup pygame
 import pygame
 pygame.init()
 
 # Constants - Note: File addresses are relative to main.py, not this script
 BASE_FILE_ADDR = "Assets/Fonts/"
+
+# Set up conversions
+conv = conversions.Conversions()
+
 
 # Class for basic text
 class Text:
