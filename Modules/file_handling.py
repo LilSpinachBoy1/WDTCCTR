@@ -15,9 +15,10 @@ lines = 1
 
 
 # Read settings
+#TODO: Change to just read the dict from the file, and then return to non testing form
 def read_settings() -> dict:
     # Get all the data from settings
-    settings_addr = USERDATA_ROOT + SETTINGS
+    settings_addr = TESTING_ROOT + SETTINGS
     file = open(settings_addr, "r")
 
     # Get screen resolution values and use location of comma to convert to usable values
@@ -35,3 +36,14 @@ def read_settings() -> dict:
     return {
         "screen_res": (int(screen_x), int(screen_y))
     }
+
+
+def write_settings(data: dict) -> None:
+    settings_addr = USERDATA_ROOT + SETTINGS
+    file = open(settings_addr, "w")
+    file.write(str(data))
+    file.close()
+
+
+t_data = read_settings()
+print(t_data["screen_res"])
