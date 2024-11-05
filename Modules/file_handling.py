@@ -4,30 +4,27 @@ FILE HANDLING MODULE: Holds functions to read and write to files
 import json
 
 # File location constants. NOTE: Files relative to main.py, not here
-USERDATA_ROOT = "UserData/"
-TESTING_ROOT = "../UserData/"
 SETTINGS = "settings.txt"
 
-"""
-A NOTE ON THE SETTINGS FILE:
-The first line of data is the screen resolution, by default full screen, but may be changed by the user
-"""
-lines = 1
 
+class Manager:
+    def __init__(self, root: str):
+        """
+        Create a file manager class that stores all the data needed to access, rather than passing it in every use
+        :param root: The file path to the "UserData" folder
+        """
+        self.file_addr = root + SETTINGS
 
-# Read settings
-def read_settings() -> dict:
-    # Get all the data from settings
-    settings_addr = USERDATA_ROOT + SETTINGS
-    file = open(settings_addr, "r")
-    data = json.loads(file.read())
-    file.close()
-    return data
+    # Read settings
+    def read_settings(self) -> dict:
+        # Get all the data from settings
+        file = open(self.file_addr, "r")
+        data = json.loads(file.read())
+        file.close()
+        return data
 
-
-def write_settings(data: dict) -> None:
-    settings_addr = USERDATA_ROOT + SETTINGS
-    file = open(settings_addr, "w")
-    data = json.dumps(data)
-    file.write(data)
-    file.close()
+    def write_settings(self, data: dict) -> None:
+        file = open(self.file_addr, "w")
+        data = json.dumps(data)
+        file.write(data)
+        file.close()

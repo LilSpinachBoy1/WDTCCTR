@@ -1,13 +1,16 @@
 """
 CONVERSIONS MODULE: Holds a class to handle conversions between percentages and coordinate values
 """
+import file_handling
+
+FileManager = file_handling.Manager()
 
 
 class Conversions:
     # Get the screen data to keep locally
-    def __init__(self, screen_data):
-        self.screen_width = screen_data[0][0]
-        self.screen_height = screen_data[0][1]
+    def __init__(self):
+        self.screen_width = screen_data[0]
+        self.screen_height = screen_data[1]
 
     # Take a pair of coordinates and convert them TO PIXEL VALUES
     def dual_pe_to_pi(self, coords: (float, float)) -> (int, int):
