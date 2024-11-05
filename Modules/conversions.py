@@ -3,7 +3,10 @@ CONVERSIONS MODULE: Holds a class to handle conversions between percentages and 
 """
 import file_handling
 
-FileManager = file_handling.Manager()
+# Get the data from settings
+FileManager = file_handling.Manager("../UserData/")
+all_data = FileManager.read_settings()
+screen_data = all_data["screen_res"]
 
 
 class Conversions:
