@@ -1,5 +1,6 @@
 import pygame
 import sys
+import Modules.ui as ui
 pygame.init()
 
 
@@ -7,6 +8,7 @@ def scn0_menu(window) -> bool:
     FPS = 60
     clock = pygame.time.Clock()
     running = True
+    test_text = ui.Text("Hallo", 50, (40, 40), window)  #TODO: Finish setting up this test
     # SCENE LOOP
     while running:
         # EVENT LOOP
