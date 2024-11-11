@@ -49,3 +49,20 @@ class Text:
 
     def out(self):
         self.surface.blit(self.text_obj, self.text_rect)
+
+
+class Button:
+    def __init__(self, func, text: str, text_size: int, pe_coords: (float, float), surf: pygame.surface, text_colour: (int, int, int) = (0, 0, 0), box_fill: (int, int, int) = (255, 255, 255), box_line: (int, int, int) = (0, 0, 0)):
+        """
+        Class to create a functioning button
+        :param func: The function to run on press of the button
+        :param text: The text to display on the button
+        :param text_size: The size of the text
+        :param pe_coords: The percentage coordinates of the button
+        :param surf: The surface to draw to
+        :param text_colour: The colour of the text passed as RGB, defaults to black
+        :param box_fill: The fill colour of the button passed as RGB, defaults to white
+        :param box_line: The outline colour of the button passed as RGB, defaults to black
+        """
+        self.text = Text(text, text_size, pe_coords, surf, colour=text_colour)
+        #TODO: Create rect to use as button
