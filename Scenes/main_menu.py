@@ -8,7 +8,7 @@ def scn0_menu(window) -> bool:
     FPS = 60
     clock = pygame.time.Clock()
     running = True
-    test_text = ui.Text("Hallo", 50, (40, 40), window)  #TODO: Finish setting up this test
+    test_text = ui.Text("Hello", 50, (40, 40), window)
     # SCENE LOOP
     while running:
         # EVENT LOOP
@@ -25,6 +25,7 @@ def scn0_menu(window) -> bool:
 
         # Update display
         window.fill((255, 255, 255))
+        test_text.out()
         pygame.display.update()
         clock.tick(FPS)
     return False  # Set to false so program does not end!

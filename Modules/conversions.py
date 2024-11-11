@@ -1,10 +1,10 @@
 """
 CONVERSIONS MODULE: Holds a class to handle conversions between percentages and coordinate values
 """
-import file_handling
+import Modules.file_handling as fh
 
 # Get the data from settings
-FileManager = file_handling.Manager("../UserData/")
+FileManager = fh.Manager("UserData/")
 all_data = FileManager.read_settings()
 screen_data = all_data["screen_res"]
 

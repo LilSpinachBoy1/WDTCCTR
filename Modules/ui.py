@@ -2,7 +2,7 @@
 UI MODULE: Holds classes for useful assets like text and buttons
 """
 # Import myyyyy stuff
-import conversions
+import Modules.conversions as con
 
 # Setup pygame
 import pygame
@@ -12,7 +12,7 @@ pygame.init()
 BASE_FILE_ADDR = "Assets/Fonts/"
 
 # Set up conversions
-conv = conversions.Conversions()
+conv = con.Conversions()
 
 
 # Class for basic text
