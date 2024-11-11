@@ -4,11 +4,22 @@ import Modules.ui as ui
 pygame.init()
 
 
+def butts():
+    print("I <3 Butts")
+
+
 def scn0_menu(window) -> bool:
     FPS = 60
     clock = pygame.time.Clock()
     running = True
-    test_text = ui.Text("Hello", 50, (40, 40), window)
+    test_butt = ui.Button(
+        butts,
+        "This is a butt",
+        50,
+        (40, 40),
+        window,
+        pe_padding=0.5
+    )
     # SCENE LOOP
     while running:
         # EVENT LOOP
@@ -25,7 +36,7 @@ def scn0_menu(window) -> bool:
 
         # Update display
         window.fill((255, 255, 255))
-        test_text.out()
+        test_butt.out()
         pygame.display.update()
         clock.tick(FPS)
     return False  # Set to false so program does not end!

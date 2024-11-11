@@ -51,8 +51,9 @@ class Text:
         self.surface.blit(self.text_obj, self.text_rect)
 
 
+# TODO: This is brooooken, needs fixing
 class Button:
-    def __init__(self, func, text: str, text_size: int, pe_coords: (float, float), surf: pygame.surface, text_colour: (int, int, int) = (0, 0, 0), box_fill: (int, int, int) = (255, 255, 255), box_line: (int, int, int) = (0, 0, 0)):
+    def __init__(self, func, text: str, text_size: int, pe_coords: (float, float), surf: pygame.surface, text_colour: (int, int, int) = (0, 0, 0), box_fill: (int, int, int) = (255, 255, 255), box_line: (int, int, int) = (0, 0, 0), pe_padding: float = 0.5):
         """
         Class to create a functioning button
         :param func: The function to run on press of the button
@@ -63,6 +64,15 @@ class Button:
         :param text_colour: The colour of the text passed as RGB, defaults to black
         :param box_fill: The fill colour of the button passed as RGB, defaults to white
         :param box_line: The outline colour of the button passed as RGB, defaults to black
+        :param pe_padding: The percentage padding of the button, defaults to 0.5
         """
-        self.text = Text(text, text_size, pe_coords, surf, colour=text_colour)
-        #TODO: Create rect to use as button
+        self.text = Text(text, text_size, pe_coords, surf, colour=text_colour)  # Create the text to use
+        self.box_topleft = conv.dual_pe_to_pi(pe_coords)  # Store the topleft coordinates of the box
+        pi_padding = conv.dual_pe_to_pi(pe_padding)  # Store the pixel values of padding to add to the text, not self. as it is only used here
+        self.text.text_rect.topleft = (self.box_topleft[0] + pi_padding[0], self.box_topleft[1] + pi_padding[1])  # Set the text position
+        self.rect = pygame.Rect(self.box_topleft, (self.text.text_rect.width + (2*pi_padding), self.text.text_rect.height + (2*pi_padding)))  # Create box rect
+        self.function, self.surf, self.fill_colour, self.outline_colour = func, surf, box_fill, box_line  # Set a load of attributes in one, cus why not
+
+    def out(self):
+        pygame.draw.rect(self.surf, self.fill_colour, self.rect, width=2)  # Width refers to the border width
+        self.text.out()
