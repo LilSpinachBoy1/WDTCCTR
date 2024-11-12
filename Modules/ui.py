@@ -51,7 +51,6 @@ class Text:
         self.surface.blit(self.text_obj, self.text_rect)
 
 
-# TODO: This is brooooken, needs fixing
 class Button:
     def __init__(self, func, text: str, text_size: int, pe_coords: (float, float), surf: pygame.surface, text_colour: (int, int, int) = (0, 0, 0), box_fill: (int, int, int) = (255, 255, 255), box_line: (int, int, int) = (0, 0, 0), pe_padding: float = 0.5):
         """
@@ -81,8 +80,21 @@ class Button:
         # Store various other parameters as attributes to use later!
         self.function, self.surf, self.fill_colour, self.outline_colour = func, surf, box_fill, box_line  # Set a load of attributes in one, cus why not
 
+        # Store the valid range of inputs: (low, high)
+        self.inp_range_x = range(self.bg_rect.topleft[0], self.bg_rect.topright[0], 1)
+        self.inp_range_y = range(self.bg_rect.topleft[1], self.bg_rect.bottomright[1], 1)
+
     def out(self):
         # Draw the rects and text
         pygame.draw.rect(self.surf, self.fill_colour, self.bg_rect)  # Draw Background rect
         pygame.draw.rect(self.surf, self.outline_colour, self.border_rect, width=2)
         self.text.out()
+
+        # --- Handle processing of functions ---
+        # Get details about the mouse usage
+        mouse_pos = pygame.mouse.get_pos()
+        pressed = pygame.mouse.get_pressed()
+
+        if pressed[0]:  # Check if the mouse button is pressed: left click
+            if mouse_pos[0] in self.inp_range_x and mouse_pos[1] in self.inp_range_y:  # Check if the pointer is in range of the button
+                self.function()
