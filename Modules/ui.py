@@ -51,6 +51,7 @@ class Text:
         self.surface.blit(self.text_obj, self.text_rect)
 
 
+# Class to create a functioning button
 class Button:
     def __init__(self, func, text: str, text_size: int, pe_coords: (float, float), surf: pygame.surface, text_colour: (int, int, int) = (0, 0, 0), box_fill: (int, int, int) = (255, 255, 255), box_line: (int, int, int) = (0, 0, 0), pe_padding: float = 0.5):
         """
