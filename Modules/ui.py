@@ -66,13 +66,23 @@ class Button:
         :param box_line: The outline colour of the button passed as RGB, defaults to black
         :param pe_padding: The percentage padding of the button, defaults to 0.5
         """
-        self.text = Text(text, text_size, pe_coords, surf, colour=text_colour)  # Create the text to use
+        # Create the text to use
+        self.text = Text(text, text_size, pe_coords, surf, colour=text_colour)
+
+        # Get positional values for rects and for text
         self.box_topleft = conv.dual_pe_to_pi(pe_coords)  # Store the topleft coordinates of the box
-        pi_padding = conv.dual_pe_to_pi(pe_padding)  # Store the pixel values of padding to add to the text, not self. as it is only used here
+        pi_padding = conv.dual_pe_to_pi((pe_padding, pe_padding))  # Store the pixel values of padding to add to the text, not self. as it is only used here
         self.text.text_rect.topleft = (self.box_topleft[0] + pi_padding[0], self.box_topleft[1] + pi_padding[1])  # Set the text position
-        self.rect = pygame.Rect(self.box_topleft, (self.text.text_rect.width + (2*pi_padding), self.text.text_rect.height + (2*pi_padding)))  # Create box rect
+
+        # Create 2 rects, one as the background, and one as the border
+        self.bg_rect = pygame.Rect(self.box_topleft, (self.text.text_rect.width + (2 * pi_padding[0]), self.text.text_rect.height + (2 * pi_padding[1])))  # Create box rect
+        self.border_rect = pygame.Rect(self.box_topleft, self.bg_rect.size)  # Create a rect the same as the bg_rect, to be used for the outline
+
+        # Store various other parameters as attributes to use later!
         self.function, self.surf, self.fill_colour, self.outline_colour = func, surf, box_fill, box_line  # Set a load of attributes in one, cus why not
 
     def out(self):
-        pygame.draw.rect(self.surf, self.fill_colour, self.rect, width=2)  # Width refers to the border width
+        # Draw the rects and text
+        pygame.draw.rect(self.surf, self.fill_colour, self.bg_rect)  # Draw Background rect
+        pygame.draw.rect(self.surf, self.outline_colour, self.border_rect, width=2)
         self.text.out()

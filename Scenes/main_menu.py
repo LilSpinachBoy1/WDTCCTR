@@ -18,6 +18,7 @@ def scn0_menu(window) -> bool:
         50,
         (40, 40),
         window,
+        box_fill=(0, 255, 255),
         pe_padding=0.5
     )
     # SCENE LOOP
