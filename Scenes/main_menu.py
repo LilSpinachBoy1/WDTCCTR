@@ -1,6 +1,7 @@
 import pygame
 import sys
 import Modules.ui as ui
+import Modules.characters as chars
 pygame.init()
 
 
@@ -21,6 +22,7 @@ def scn0_menu(window) -> bool:
         box_fill=(0, 255, 255),
         pe_padding=0.5
     )
+    test_snail = chars.Player(window, (10, 60))
     # SCENE LOOP
     while running:
         # EVENT LOOP
@@ -38,6 +40,7 @@ def scn0_menu(window) -> bool:
         # Update display
         window.fill((255, 255, 255))
         test_butt.out()
+        test_snail.out()
         pygame.display.update()
         clock.tick(FPS)
     return False  # Set to false so program does not end!
