@@ -6,7 +6,6 @@ import pygame
 from pygame.locals import (
     K_w,
     K_a,
-    K_s,
     K_d
 )
 movement_keys = [K_a, K_d]
@@ -34,7 +33,7 @@ class Player(pygame.sprite.Sprite):
         self.vertical_speed = 0  # Holds the magnitude and direction of movement
         self.GRAVITY = 0.4
         self.JUMP_STRENGTH = -10  # This needs to be negative so the character moves upwards
-        self.speed = 1
+        self.SPEED = 2
         self.direction = "+"
         self.ground_list = ground_list
 
@@ -63,10 +62,10 @@ class Player(pygame.sprite.Sprite):
         # Move the sprite based on inputs
         new_direction = self.direction
         if pressed[K_d]:
-            self.horizontal_movement = self.speed
+            self.horizontal_movement = self.SPEED
             new_direction = "+"
         elif pressed[K_a]:
-            self.horizontal_movement = -self.speed
+            self.horizontal_movement = -self.SPEED
             new_direction = "-"
         self.coords[0] += self.horizontal_movement  # Change x coordinate based on vertical movement variable
         self.rect.bottomleft = self.coords  # Apply coordinate change to rect position
