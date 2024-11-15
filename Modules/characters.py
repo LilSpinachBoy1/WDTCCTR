@@ -16,14 +16,14 @@ cvt = cons.Conversions()
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, surface: pygame.Surface, pe_coords: (float, float)):
+    def __init__(self, surface: pygame.Surface, pe_coords: (float, float), scale: int = 30):
         super(Player, self).__init__()
         self.image = pygame.image.load("Assets/Sprites and Animations/Snail/SN_idle.png")  # Import idle snail image
-        self.img_scale = 30  # Set the size for the image
+        self.img_scale = scale  # Set the size for the image
         self.image_target_size = (cvt.pe_to_pi(self.img_scale, True), cvt.pe_to_pi(self.img_scale, True))  # Store the target dimensions for the image
         self.image = pygame.transform.scale(self.image, self.image_target_size)  # Resize the image
         self.rect = self.image.get_rect()  # Get the rect for the image to use for coordinates
-        self.rect.topleft = cvt.dual_pe_to_pi(pe_coords)  # Set position of rect
+        self.rect.bottomleft = cvt.dual_pe_to_pi(pe_coords)  # Set position of rect
         self.screen = surface  # Store the surface to blit to
 
         # Movement based attributes
@@ -42,5 +42,5 @@ class Player(pygame.sprite.Sprite):
         print(self.is_moving)
 
     def out(self):
-        self.process_movement()
+        # self.process_movement()
         self.screen.blit(self.image, self.rect)

@@ -22,7 +22,7 @@ def scn0_menu(window) -> bool:
         box_fill=(0, 255, 255),
         pe_padding=0.5
     )
-    test_snail = chars.Player(window, (10, 60))
+    test_snail = chars.Player(window, (15, 100), scale=25)
     # SCENE LOOP
     while running:
         # EVENT LOOP
