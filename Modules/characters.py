@@ -23,7 +23,8 @@ class Player(pygame.sprite.Sprite):
         self.image_target_size = (cvt.pe_to_pi(self.img_scale, True), cvt.pe_to_pi(self.img_scale, True))  # Store the target dimensions for the image
         self.image = pygame.transform.scale(self.image, self.image_target_size)  # Resize the image
         self.rect = self.image.get_rect()  # Get the rect for the image to use for coordinates
-        self.rect.bottomleft = cvt.dual_pe_to_pi(pe_coords)  # Set position of rect
+        self.coords = list(cvt.dual_pe_to_pi(pe_coords))
+        self.rect.bottomleft = self.coords  # Set position of rect
         self.screen = surface  # Store the surface to blit to
 
         # Movement based attributes
@@ -31,16 +32,20 @@ class Player(pygame.sprite.Sprite):
         self.vertical_movement = 0
 
     def process_movement(self):
-        events = pygame.event.get()
-        # TODO: This doesnt work
-        for event in events:
-            if event.type == pygame.KEYDOWN and event.key in movement_keys:
-                self.is_moving = True
-            if event.type == pygame.KEYUP and event.key in movement_keys:
-                self.is_moving = False
+        # Set flag for if movement is occurring, in order to determine if an animation should run
+        pressed = pygame.key.get_pressed()  # Gets all keys pressed
+        self.is_moving = any(pressed[key] for key in movement_keys)  # Sets true if any of the keys in movement_keys are currently pressed
 
-        print(self.is_moving)
+        # Move the sprite based on inputs
+        if pressed[K_d]:
+            self.vertical_movement = 1
+        elif pressed[K_a]:
+            self.vertical_movement = -1
+        self.coords[0] += self.vertical_movement  # Change x coordinate based on vertical movement variable
+        self.rect.bottomleft = self.coords  # Apply coordinate change to rect position
+
+        self.vertical_movement = 0  # End movement if no keys are pressed
 
     def out(self):
-        # self.process_movement()
+        self.process_movement()
         self.screen.blit(self.image, self.rect)
