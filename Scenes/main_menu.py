@@ -2,6 +2,8 @@ import pygame
 import sys
 import Modules.ui as ui
 import Modules.characters as chars
+import Modules.conversions as cvns
+cons = cvns.Conversions()
 pygame.init()
 
 
@@ -22,7 +24,10 @@ def scn0_menu(window) -> bool:
         box_fill=(0, 255, 255),
         pe_padding=0.5
     )
-    test_snail = chars.Player(window, (15, 100), scale=25)
+    coords = cons.dual_pe_to_pi((0, 95))
+    dimensions = cons.dual_pe_to_pi((100, 10))
+    ground_rect = pygame.Rect(coords, dimensions)
+    test_snail = chars.Player(window, (15, 20), [ground_rect], scale=25)
     # SCENE LOOP
     while running:
         # EVENT LOOP
@@ -39,6 +44,7 @@ def scn0_menu(window) -> bool:
 
         # Update display
         window.fill((255, 255, 255))
+        pygame.draw.rect(window, (0, 255, 0), ground_rect)
         test_butt.out()
         test_snail.out()
         pygame.display.update()
