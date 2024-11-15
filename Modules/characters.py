@@ -9,7 +9,7 @@ from pygame.locals import (
     K_s,
     K_d
 )
-movement_keys = [K_w, K_a, K_s, K_d]
+movement_keys = [K_a, K_d]
 pygame.init()
 
 cvt = cons.Conversions()
@@ -32,7 +32,8 @@ class Player(pygame.sprite.Sprite):
         self.is_grounded = False  # Used to implement gravity
         self.horizontal_movement = 0  # Holds the direction of movement
         self.vertical_speed = 0  # Holds the magnitude and direction of movement
-        self.GRAVITY = 0.2
+        self.GRAVITY = 0.4
+        self.JUMP_STRENGTH = -10  # This needs to be negative so the character moves upwards
         self.speed = 1
         self.direction = "+"
         self.ground_list = ground_list
@@ -41,11 +42,17 @@ class Player(pygame.sprite.Sprite):
         # WHY THE FUCK DOES THIS WORK? How about we just ball with it...
         if not self.rect.collidelist(self.ground_list):  # If the character is grounded
             self.is_grounded = True
-            self.vertical_speed = -0.1  # This negative value just means that if the character clips into a rect, it will slowly push its way back up
+            self.vertical_speed = -0.2  # This negative value just means that if the character clips into a rect, it will slowly push its way back up. If it was larger, it would rise quicker, but would cause bouncing at the surface of the rect
         else:
             self.is_grounded = False
             self.vertical_speed += self.GRAVITY
-            
+
+        # Boing time! (Implementing jumping)
+        pressed = pygame.key.get_pressed()
+        if pressed[K_w] and self.is_grounded:
+            self.vertical_speed += self.JUMP_STRENGTH
+
+        # Change the coordinates based on the new movement
         self.coords[1] += self.vertical_speed
 
     def horizontal_control(self):
