@@ -41,7 +41,8 @@ class Player(pygame.sprite.Sprite):
         # WHY THE FUCK DOES THIS WORK? How about we just ball with it...
         if not self.rect.collidelist(self.ground_list):  # If the character is grounded
             self.is_grounded = True
-            self.vertical_speed = -0.2  # This negative value just means that if the character clips into a rect, it will slowly push its way back up. If it was larger, it would rise quicker, but would cause bouncing at the surface of the rect
+            self.vertical_speed = 0
+            self.coords[1] = self.ground_list[0].top + 1
         else:
             self.is_grounded = False
             self.vertical_speed += self.GRAVITY
