@@ -40,6 +40,7 @@ class Player(pygame.sprite.Sprite):
     def vertical_control(self):
         # WHY THE FUCK DOES THIS WORK? How about we just ball with it...
         if not self.rect.collidelist(self.ground_list):  # If the character is grounded
+            # TODO: Make this iterate over each item in ground_list to check each item, for line 46 (self.coords[1]...)
             self.is_grounded = True
             self.vertical_speed = 0
             self.coords[1] = self.ground_list[0].top + 1
