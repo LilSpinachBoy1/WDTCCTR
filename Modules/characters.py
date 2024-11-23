@@ -61,6 +61,8 @@ class Player(pygame.sprite.Sprite):
         pressed = pygame.key.get_pressed()  # Gets all keys pressed
         self.is_moving = any(pressed[key] for key in movement_keys)  # Sets true if any of the keys in movement_keys are currently pressed
 
+        # TODO: Put side collide logic here? Pretty much the same as in v_control but just for clipping into the side of rects.
+
         # Move the sprite based on inputs
         new_direction = self.direction
         if pressed[K_d]:
