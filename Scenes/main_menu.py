@@ -15,15 +15,6 @@ def scn0_menu(window) -> bool:
     FPS = 60
     clock = pygame.time.Clock()
     running = True
-    test_butt = ui.Button(
-        butts,
-        "This is a butt",
-        50,
-        (40, 40),
-        window,
-        box_fill=(0, 255, 255),
-        pe_padding=0.5
-    )
 
     # Make ground
     coords = cons.dual_pe_to_pi((0, 95))
@@ -55,7 +46,6 @@ def scn0_menu(window) -> bool:
         window.fill((255, 255, 255))
         pygame.draw.rect(window, (0, 255, 0), ground_rect)
         pygame.draw.rect(window, (0, 255, 0), ground_rect2)
-        test_butt.out()
         test_snail.out()
         pygame.display.update()
         clock.tick(FPS)
