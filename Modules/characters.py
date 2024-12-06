@@ -14,6 +14,15 @@ pygame.init()
 cvt = cons.Conversions()
 
 
+def collision_check(focus: pygame.Rect, item: pygame.Rect) -> dict:
+    top_collision: bool = focus.top < item.bottom
+    bottom_collision: bool = focus.bottom > item.top
+    left_collision: bool = focus.left < item.right
+    right_collision: bool = focus.right > item.left
+    collisions = {"Top": top_collision, "Bottom": bottom_collision, "Left": left_collision, "Right": right_collision}
+    return collisions
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, surface: pygame.Surface, pe_coords: (float, float), ground_list: list, scale: int = 30):
         super(Player, self).__init__()
