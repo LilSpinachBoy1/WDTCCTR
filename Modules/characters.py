@@ -23,6 +23,11 @@ def collision_check(focus: pygame.Rect, item: pygame.Rect) -> dict:
     return collisions
 
 
+# Procedure to set the character rect to the top of the ground rect
+def set_to_ground(focus: pygame.Rect, item: pygame.Rect) -> None:
+    focus.bottom = item.top
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, surface: pygame.Surface, pe_coords: (float, float), ground_list: list, scale: int = 30):
         super(Player, self).__init__()
@@ -49,11 +54,13 @@ class Player(pygame.sprite.Sprite):
     def vertical_control(self):
         # Mega jump, whats going on here?
         # TODO: Fix
-        for rect in self.ground_list:
-            if self.rect.colliderect(rect):
+        for check_rect in self.ground_list:
+            current_collision_state = collision_check(self.rect, check_rect)
+            if current_collision_state["Bottom"]:
                 self.is_grounded = True
                 self.vertical_speed = 0
-                self.coords[1] = self.ground_list[0].top + 1
+                set_to_ground(self.rect, check_rect)
+
         if not self.is_grounded:
             self.vertical_speed += self.GRAVITY
 
