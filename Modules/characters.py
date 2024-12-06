@@ -52,8 +52,7 @@ class Player(pygame.sprite.Sprite):
         self.ground_list = ground_list
 
     def vertical_control(self):
-        # Mega jump, whats going on here?
-        # TODO: Fix
+        # Check against each rect for if the player is grounded
         for check_rect in self.ground_list:
             current_collision_state = collision_check(self.rect, check_rect)
             if current_collision_state["Bottom"]:
