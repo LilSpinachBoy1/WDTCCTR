@@ -60,6 +60,8 @@ class Player(pygame.sprite.Sprite):
                 self.is_grounded = True
                 self.vertical_speed = 0
                 set_to_ground(self.rect, check_rect)
+            else:
+                self.is_grounded = False
 
         if not self.is_grounded:
             self.vertical_speed += self.GRAVITY
