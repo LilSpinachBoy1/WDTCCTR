@@ -45,14 +45,16 @@ class Player(pygame.sprite.Sprite):
         self.is_grounded = False  # Used to implement gravity
         self.horizontal_movement = 0  # Holds the direction of movement
         self.vertical_speed = 0  # Holds the magnitude and direction of movement
-        self.GRAVITY = 0.4
-        self.JUMP_STRENGTH = -10  # This needs to be negative so the character moves upwards
+        self.GRAVITY = 0.6
+        self.JUMP_STRENGTH = -20  # This needs to be negative so the character moves upwards
         self.SPEED = 2
         self.direction = "+"
         self.ground_list = ground_list
 
     def vertical_control(self):
         # Check against each rect for if the player is grounded
+        # TODO: Make checks local so it actually hits the ground it should
+        # Could do this by comparing x coord?
         for check_rect in self.ground_list:
             current_collision_state = collision_check(self.rect, check_rect)
             if current_collision_state["Bottom"]:
