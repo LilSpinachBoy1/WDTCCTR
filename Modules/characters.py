@@ -89,17 +89,13 @@ class Player(pygame.sprite.Sprite):
 
     def vertical_control(self):
         # Check against each rect for if the player is grounded
-        # TODO: Make checks local so it actually hits the ground it should
-        # Could do this by comparing x coord?
-        # for check_rect in self.ground_list:
-        #     current_collision_state = collision_check(self.rect, check_rect)
-        #     if current_collision_state["Bottom"]:
-        #         self.is_grounded = True
-        #         self.vertical_speed = 0
-        #         set_to_ground(self.rect, check_rect)
-        #     else:
-        #         self.is_grounded = False
         state = vertical_collision_check(self.rect, self.ground_list)
+        if state["Bottom"]:
+            self.is_grounded = True
+            self.vertical_speed = 0
+            set_to_ground(self.rect, self.ground_list[0])
+        else:
+            self.is_grounded = False
 
         if not self.is_grounded:
             self.vertical_speed += self.GRAVITY
