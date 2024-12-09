@@ -7,10 +7,6 @@ cons = cvns.Conversions()
 pygame.init()
 
 
-def butts():
-    print("I <3 Butts")
-
-
 def scn0_menu(window) -> bool:
     FPS = 60
     clock = pygame.time.Clock()
@@ -18,7 +14,7 @@ def scn0_menu(window) -> bool:
 
     # Make ground
     coords = cons.dual_pe_to_pi((0, 95))
-    dimensions = cons.dual_pe_to_pi((100, 10))
+    dimensions = cons.dual_pe_to_pi((60, 10))
     ground_rect = pygame.Rect(coords, dimensions)
 
     # Make more ground

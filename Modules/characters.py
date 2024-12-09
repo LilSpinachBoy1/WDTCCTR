@@ -136,4 +136,3 @@ class Player(pygame.sprite.Sprite):
         self.horizontal_control()
         self.vertical_control()
         self.screen.blit(self.image, self.rect)
-        print(self.coords)
