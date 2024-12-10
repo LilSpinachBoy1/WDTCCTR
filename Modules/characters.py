@@ -25,16 +25,6 @@ def collision_check(focus: pygame.Rect, item: pygame.Rect) -> dict:
     return collisions
 
 
-def find_highest_grnd_rect(focus: pygame.Rect, ground_list: list) -> pygame.Rect:
-    current_rects_y = []  # List to store the y values of the rects that the player is over
-
-    # Find all the rects that the player is over
-    for rect in ground_list:  # Check each rect in the list
-        x_range = range(rect.left, rect.right)  # Get the range of x values for the current rect
-        if focus.left in x_range or focus.right in x_range:  # Check if the focus rect is within the x range of the current rect
-            current_rects_y.append([rect, rect.top])  # If it is, add the y value of the current rect to the list
-
-
 def vertical_collision_check(focus: pygame.Rect, ground: list) -> dict:
     current_rects_y = []  # List to store the y values of the rects that the player is over
 
@@ -124,7 +114,7 @@ class Player(pygame.sprite.Sprite):
         pressed = pygame.key.get_pressed()  # Gets all keys pressed
         self.is_moving = any(pressed[key] for key in movement_keys)  # Sets true if any of the keys in movement_keys are currently pressed
 
-        # TODO: Put side collide logic here? Pretty much the same as in v_control but just for clipping into the side of rects.
+        # TODO: Doesn't work, just keeps phasing in and out of existence (HOW?)
         for rect in self.h_collision_rects:
             state = collision_check(self.rect, rect)
             if state["Left"]:
