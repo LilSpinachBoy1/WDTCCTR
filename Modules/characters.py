@@ -66,7 +66,15 @@ def set_to_ground(focus: pygame.Rect, item: pygame.Rect) -> None:
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, surface: pygame.Surface, pe_coords: (float, float), ground_list: list, scale: int = 30):
+    def __init__(self, surface: pygame.Surface, pe_coords: (float, float), ground_list: list, h_collisions_list: list, scale: int = 30):
+        """
+        Class for the player character
+        :param surface: The surface to blit the player to
+        :param pe_coords: The starting coordinates for the player
+        :param ground_list: The list of rects that the player can collide with (VERTICALLY)
+        :param h_collisions_list: The list of rects that the player can collide with (HORIZONTALLY)
+        :param scale: Scale of the image to use
+        """
         super(Player, self).__init__()
         self.image = pygame.image.load("Assets/Sprites and Animations/Snail/SN_idle.png")  # Import idle snail image
         self.img_scale = scale  # Set the size for the image
@@ -84,9 +92,11 @@ class Player(pygame.sprite.Sprite):
         self.vertical_speed = 0  # Holds the magnitude and direction of movement
         self.GRAVITY = 0.6
         self.JUMP_STRENGTH = -20  # This needs to be negative so the character moves upwards
-        self.SPEED = 2
+        self.SPEED_DEF_VALUE = 2  # Default speed value
+        self.speed = self.SPEED_DEF_VALUE  # Speed value that can be changed
         self.direction = "+"
         self.ground_list = ground_list
+        self.h_collision_rects = h_collisions_list
 
     def vertical_control(self):
         # Check against each rect for if the player is grounded
@@ -115,14 +125,20 @@ class Player(pygame.sprite.Sprite):
         self.is_moving = any(pressed[key] for key in movement_keys)  # Sets true if any of the keys in movement_keys are currently pressed
 
         # TODO: Put side collide logic here? Pretty much the same as in v_control but just for clipping into the side of rects.
+        for rect in self.h_collision_rects:
+            state = collision_check(self.rect, rect)
+            if state["Left"]:
+                self.coords[0] = rect.right
+            elif state["Right"]:
+                self.coords[0] = rect.left - self.rect.width
 
         # Move the sprite based on inputs
         new_direction = self.direction
         if pressed[K_d]:
-            self.horizontal_movement = self.SPEED
+            self.horizontal_movement = self.speed
             new_direction = "+"
         elif pressed[K_a]:
-            self.horizontal_movement = -self.SPEED
+            self.horizontal_movement = -self.speed
             new_direction = "-"
         self.coords[0] += self.horizontal_movement  # Change x coordinate based on vertical movement variable
         self.rect.bottomleft = self.coords  # Apply coordinate change to rect position

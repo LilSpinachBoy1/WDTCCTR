@@ -14,7 +14,7 @@ def scn0_menu(window) -> bool:
 
     # Make ground
     coords = cons.dual_pe_to_pi((0, 95))
-    dimensions = cons.dual_pe_to_pi((60, 10))
+    dimensions = cons.dual_pe_to_pi((100, 10))
     ground_rect = pygame.Rect(coords, dimensions)
 
     # Make more ground
@@ -22,8 +22,8 @@ def scn0_menu(window) -> bool:
     dimensions2 = cons.dual_pe_to_pi((40, 10))
     ground_rect2 = pygame.Rect(coords2, dimensions2)
 
-    # Make snel TODO: Second ground rect does not collide?
-    test_snail = chars.Player(window, (15, 20), [ground_rect, ground_rect2], scale=25)
+    # Make snel
+    test_snail = chars.Player(window, (15, 20), [ground_rect, ground_rect2], [ground_rect2], scale=25)
     # SCENE LOOP
     while running:
         # EVENT LOOP
