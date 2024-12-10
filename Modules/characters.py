@@ -20,6 +20,8 @@ def collision_check(focus: pygame.Rect, item: pygame.Rect) -> dict:
     left_collision: bool = focus.left < item.right
     right_collision: bool = focus.right > item.left
     collisions = {"Top": top_collision, "Bottom": bottom_collision, "Left": left_collision, "Right": right_collision}
+    if top_collision or bottom_collision or left_collision or right_collision:  # If there is a collision
+        collisions["Rect"] = item
     return collisions
 
 
@@ -33,7 +35,6 @@ def find_highest_grnd_rect(focus: pygame.Rect, ground_list: list) -> pygame.Rect
             current_rects_y.append([rect, rect.top])  # If it is, add the y value of the current rect to the list
 
 
-# TODO: Make a hybrid of the above functions? Separating x and y collisions into 2 checks.
 def vertical_collision_check(focus: pygame.Rect, ground: list) -> dict:
     current_rects_y = []  # List to store the y values of the rects that the player is over
 
@@ -56,7 +57,7 @@ def vertical_collision_check(focus: pygame.Rect, ground: list) -> dict:
         current_collision_state = collision_check(focus, highest_rect[0])  # Check if the player is colliding with the highest rect
         return current_collision_state  # Return the collision state
     else:  # If the highest rect is not set
-        return {"Top": False, "Bottom": False, "Left": False, "Right": False}  # Return that the player is not colliding with anything
+        return {"Top": False, "Bottom": False, "Left": False, "Right": False, "Rect": None}  # Return that the player is not colliding with anything
 
 
 # Procedure to set the character rect to the top of the ground rect
@@ -93,7 +94,7 @@ class Player(pygame.sprite.Sprite):
         if state["Bottom"]:
             self.is_grounded = True
             self.vertical_speed = 0
-            set_to_ground(self.rect, self.ground_list[0])
+            set_to_ground(self.rect, state["Rect"])  # ALWAYS CALLS ON FIRST GROUND RECT YOU MELT
         else:
             self.is_grounded = False
 
