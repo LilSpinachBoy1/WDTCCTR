@@ -114,14 +114,6 @@ class Player(pygame.sprite.Sprite):
         pressed = pygame.key.get_pressed()  # Gets all keys pressed
         self.is_moving = any(pressed[key] for key in movement_keys)  # Sets true if any of the keys in movement_keys are currently pressed
 
-        # TODO: Doesn't work, just keeps phasing in and out of existence (HOW?)
-        for rect in self.h_collision_rects:
-            state = collision_check(self.rect, rect)
-            if state["Left"]:
-                self.coords[0] = rect.right
-            elif state["Right"]:
-                self.coords[0] = rect.left - self.rect.width
-
         # Move the sprite based on inputs
         new_direction = self.direction
         if pressed[K_d]:
@@ -130,7 +122,21 @@ class Player(pygame.sprite.Sprite):
         elif pressed[K_a]:
             self.horizontal_movement = -self.speed
             new_direction = "-"
-        self.coords[0] += self.horizontal_movement  # Change x coordinate based on vertical movement variable
+
+        player_height_range = range(self.rect.top, self.rect.bottom)  # Get the range of y values for the player rect
+        # Check for collisions before updating position
+        for rect in self.h_collision_rects:
+            # Only check for collisions if the player is at the same height as the rect
+            if rect.top in player_height_range or rect.bottom in player_height_range:
+                state = collision_check(self.rect, rect)
+                if state["Left"] and self.horizontal_movement < 0:
+                    self.coords[0] = rect.right
+                    self.horizontal_movement = 0
+                elif state["Right"] and self.horizontal_movement > 0:
+                    self.coords[0] = rect.left - self.rect.width
+                    self.horizontal_movement = 0
+
+        self.coords[0] += self.horizontal_movement  # Change x coordinate based on horizontal movement variable
         self.rect.bottomleft = self.coords  # Apply coordinate change to rect position
         self.horizontal_movement = 0  # End movement if no keys are pressed
 
