@@ -88,64 +88,27 @@ class Player(pygame.sprite.Sprite):
         self.ground_list = ground_list
         self.h_collision_rects = h_collisions_list
 
-    def vertical_control(self):
-        # Check against each rect for if the player is grounded
-        state = vertical_collision_check(self.rect, self.ground_list)
-        if state["Bottom"]:
+    def movement(self) -> None:
+        # Find if the player is grounded, and if not add gravity
+        collided_indices = self.rect.collidelistall(self.ground_list)
+        if collided_indices:
             self.is_grounded = True
             self.vertical_speed = 0
-            set_to_ground(self.rect, state["Rect"])  # ALWAYS CALLS ON FIRST GROUND RECT YOU MELT
+            collided_rects = [self.ground_list[i] for i in collided_indices]
         else:
             self.is_grounded = False
-
-        if not self.is_grounded:
             self.vertical_speed += self.GRAVITY
+            collided_rects = []
 
-        # Boing time! (Implementing jumping)
+        # Boing
         pressed = pygame.key.get_pressed()
-        if pressed[K_w] and self.is_grounded:
-            self.vertical_speed += self.JUMP_STRENGTH
+        if self.is_grounded and pressed[K_w]:
+            self.vertical_speed = self.JUMP_STRENGTH
 
-        # Change the coordinates based on the new movement
+        # Add movement based on speed values
         self.coords[1] += self.vertical_speed
 
-    def horizontal_control(self):
-        # Set flag for if movement is occurring, in order to determine if an animation should run
-        pressed = pygame.key.get_pressed()  # Gets all keys pressed
-        self.is_moving = any(pressed[key] for key in movement_keys)  # Sets true if any of the keys in movement_keys are currently pressed
-
-        # Move the sprite based on inputs
-        new_direction = self.direction
-        if pressed[K_d]:
-            self.horizontal_movement = self.speed
-            new_direction = "+"
-        elif pressed[K_a]:
-            self.horizontal_movement = -self.speed
-            new_direction = "-"
-
-        player_height_range = range(self.rect.top, self.rect.bottom)  # Get the range of y values for the player rect
-        # Check for collisions before updating position
-        for rect in self.h_collision_rects:
-            # Only check for collisions if the player is at the same height as the rect
-            if rect.top in player_height_range or rect.bottom in player_height_range:
-                state = collision_check(self.rect, rect)
-                if state["Left"] and self.horizontal_movement < 0:
-                    self.coords[0] = rect.right
-                    self.horizontal_movement = 0
-                elif state["Right"] and self.horizontal_movement > 0:
-                    self.coords[0] = rect.left - self.rect.width
-                    self.horizontal_movement = 0
-
-        self.coords[0] += self.horizontal_movement  # Change x coordinate based on horizontal movement variable
-        self.rect.bottomleft = self.coords  # Apply coordinate change to rect position
-        self.horizontal_movement = 0  # End movement if no keys are pressed
-
-        # Determine if image needs to be flipped
-        if self.direction != new_direction:
-            self.direction = new_direction
-            self.image = pygame.transform.flip(self.image, flip_y=False, flip_x=True)
-
     def out(self):
-        self.horizontal_control()
-        self.vertical_control()
+        self.movement()
+        self.rect.topleft = self.coords
         self.screen.blit(self.image, self.rect)
