@@ -82,7 +82,7 @@ class Player(pygame.sprite.Sprite):
         self.vertical_speed = 0  # Holds the magnitude and direction of movement
         self.GRAVITY = 0.6
         self.JUMP_STRENGTH = -20  # This needs to be negative so the character moves upwards
-        self.SPEED_DEF_VALUE = 2  # Default speed value
+        self.SPEED_DEF_VALUE = 4  # Default speed value
         self.speed = self.SPEED_DEF_VALUE  # Speed value that can be changed
         self.direction = "+"
         self.ground_list = ground_list
@@ -100,12 +100,34 @@ class Player(pygame.sprite.Sprite):
             self.vertical_speed += self.GRAVITY
             collided_rects = []
 
-        # Boing
+        # TODO: Move the rect up when it intersects with terrain
+
         pressed = pygame.key.get_pressed()
+
+        # Boing
         if self.is_grounded and pressed[K_w]:
             self.vertical_speed = self.JUMP_STRENGTH
 
+        # TODO: Implement horizontal collision detection
+
+        # Horizontal movement
+        if pressed[K_a]:
+            self.horizontal_movement = -self.speed
+            new_direction = "-"
+        elif pressed[K_d]:
+            self.horizontal_movement = self.speed
+            new_direction = "+"
+        else:
+            new_direction = self.direction  # If no movement, keep the current direction
+            self.horizontal_movement = 0
+
+        # Determine if image needs to be flipped based on movement direction
+        if self.direction != new_direction:
+            self.direction = new_direction
+            self.image = pygame.transform.flip(self.image, flip_y=False, flip_x=True)
+
         # Add movement based on speed values
+        self.coords[0] += self.horizontal_movement
         self.coords[1] += self.vertical_speed
 
     def out(self):
