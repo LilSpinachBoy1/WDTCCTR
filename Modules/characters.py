@@ -1,8 +1,6 @@
 """
 MODULE THAT WILL CONTAIN CLASSES FOR PLAYER AND ENEMY CHARACTERS
 """
-from logging import setLogRecordFactory
-
 import Modules.conversions as cons
 import pygame
 from pygame.locals import (
@@ -16,11 +14,22 @@ pygame.init()
 cvt = cons.Conversions()
 
 
-def collision_check(focus: pygame.Rect, item: pygame.Rect) -> dict:
-    top_collision: bool = focus.top < item.bottom
-    bottom_collision: bool = focus.bottom > item.top
-    left_collision: bool = focus.left < item.right
-    right_collision: bool = focus.right > item.left
+def collision_check(player: pygame.Rect, item: pygame.Rect) -> dict:
+    # VERTICAL COLLISIONS
+    top_collision: bool = player.top > item.bottom
+    bottom_collision: bool = player.bottom > item.top
+
+    # HORIZONTAL COLLISIONS
+    # NOTE: These checks only run if the focus is within the y range of the rect, to prevent returning collisions with a rect the player is vertically over or under
+    check_range = range(item.top + 2, item.bottom)  # This plus 2 is just so setting the player to the ground does'nt trigger collisions
+    if player.bottom in check_range or player.top in check_range:
+        left_collision: bool = player.left < item.right
+        right_collision: bool = player.right > item.left
+    else:
+        left_collision: bool = False
+        right_collision: bool = False
+
+    # POPULATING DICT
     collisions = {"Top": top_collision, "Bottom": bottom_collision, "Left": left_collision, "Right": right_collision}
     if top_collision or bottom_collision or left_collision or right_collision:  # If there is a collision
         collisions["Rect"] = item
@@ -96,18 +105,21 @@ class Player(pygame.sprite.Sprite):
             new_direction = self.direction  # If no movement, keep the current direction
             self.horizontal_movement = 0
 
-        # TODO: Implement horizontal collision detection
         # Check collisions against all recs used for horizontal collisions
         for rect in self.h_collision_rects:
             collision_state = collision_check(self.rect, rect)
-            if collision_state["Left"]:
-                self.is_h_collision = True
-                self.horizontal_movement = 1
-            elif collision_state["Right"]:
-                self.is_h_collision = True
-                self.horizontal_movement = -1
-            else:
-                self.is_h_collision = False
+            print(collision_state)
+            if rect not in collided_rects:
+                if collision_state["Left"]:
+                    self.is_h_collision = True
+                    self.horizontal_movement = 1
+                elif collision_state["Right"]:
+                    self.is_h_collision = True
+                    self.horizontal_movement = -1
+                else:
+                    self.is_h_collision = False
+            else: self.is_h_collision = False
+        print("----------------")
 
         # Determine if image needs to be flipped based on movement direction
         if self.direction != new_direction:
