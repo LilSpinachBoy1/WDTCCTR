@@ -18,12 +18,17 @@ def scn0_menu(window) -> bool:
     ground_rect = pygame.Rect(coords, dimensions)
 
     # Make more ground
-    coords2 = cons.dual_pe_to_pi((60, 85))
-    dimensions2 = cons.dual_pe_to_pi((40, 10))
+    coords2 = cons.dual_pe_to_pi((70, 85))
+    dimensions2 = cons.dual_pe_to_pi((30, 10))
     ground_rect2 = pygame.Rect(coords2, dimensions2)
 
+    # Make even more ground
+    coords3 = cons.dual_pe_to_pi((0, 85))
+    dimensions3 = cons.dual_pe_to_pi((30, 10))
+    ground_rect3 = pygame.Rect(coords3, dimensions3)
+
     # Make snel
-    test_snail = chars.Player(window, (15, 20), [ground_rect, ground_rect2], scale=25)
+    test_snail = chars.Player(window, (35, 20), [ground_rect, ground_rect2, ground_rect3], scale=25)
     # SCENE LOOP
     while running:
         # EVENT LOOP
@@ -35,13 +40,13 @@ def scn0_menu(window) -> bool:
         # Check Key Presses
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_ESCAPE]:
-            running = False
             return True  # Set to true so the program ends!
 
         # Update display
         window.fill((255, 255, 255))
         pygame.draw.rect(window, (0, 255, 0), ground_rect)
         pygame.draw.rect(window, (0, 255, 0), ground_rect2)
+        pygame.draw.rect(window, (0, 255, 0), ground_rect3)
         test_snail.out()
         pygame.display.update()
         clock.tick(FPS)
