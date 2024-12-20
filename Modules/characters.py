@@ -73,32 +73,34 @@ class Player(pygame.sprite.Sprite):
         self.speed = self.SPEED_DEF_VALUE  # Speed value that can be changed
         self.direction = "+"
         self.ground_list = ground_list
+        self.collided_rects = []
+        self.pressed = pygame.key.get_pressed()  # Gets the current input status
         if h_collisions_list: self.h_collision_rects = h_collisions_list
         else: self.h_collision_rects = self.ground_list
 
-    def movement(self) -> None:
+    def v_movement(self):
         # Find if the player is grounded, and if not add gravity
         collided_indices = self.rect.collidelistall(self.ground_list)
         if collided_indices:
             self.is_grounded = True
             self.vertical_speed = 0
-            collided_rects = [self.ground_list[i] for i in collided_indices]
+            self.collided_rects = [self.ground_list[i] for i in collided_indices]
         else:
             self.is_grounded = False
             self.vertical_speed += self.GRAVITY
-            collided_rects = []
-
-        pressed = pygame.key.get_pressed()
-
+            self.collided_rects = []
         # Boing
-        if self.is_grounded and pressed[K_w]:
+        if self.is_grounded and self.pressed[K_w]:
             self.vertical_speed = self.JUMP_STRENGTH
 
-        # Horizontal movement
-        if pressed[K_a]:
+        # Apply coordinate changes
+        self.coords[0] += self.horizontal_movement
+
+    def h_movement(self):
+        if self.pressed[K_a]:
             self.horizontal_movement = -self.speed
             new_direction = "-"
-        elif pressed[K_d]:
+        elif self.pressed[K_d]:
             self.horizontal_movement = self.speed
             new_direction = "+"
         else:
@@ -109,7 +111,7 @@ class Player(pygame.sprite.Sprite):
         for rect in self.h_collision_rects:
             collision_state = collision_check(self.rect, rect)
             print(collision_state)
-            if rect not in collided_rects:
+            if rect not in self.collided_rects:
                 if collision_state["Left"]:
                     self.is_h_collision = True
                     self.horizontal_movement = 1
@@ -127,11 +129,12 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, flip_y=False, flip_x=True)
 
         # Add movement based on speed values
-        self.coords[0] += self.horizontal_movement  # X COORDINATE
-        if self.is_grounded: self.coords[1] = collided_rects[0].top
+        if self.is_grounded: self.coords[1] = self.collided_rects[0].top
         else: self.coords[1] += self.vertical_speed
 
     def out(self):
-        self.movement()
+        self.pressed = pygame.key.get_pressed()
+        self.v_movement()
+        self.h_movement()
         self.rect.bottomleft = self.coords
         self.screen.blit(self.image, self.rect)
