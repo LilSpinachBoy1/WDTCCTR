@@ -1,6 +1,8 @@
 """
 MODULE THAT WILL CONTAIN CLASSES FOR PLAYER AND ENEMY CHARACTERS
 """
+from logging import setLogRecordFactory
+
 import Modules.conversions as cons
 import pygame
 from pygame.locals import (
@@ -31,13 +33,13 @@ def set_to_ground(focus: pygame.Rect, item: pygame.Rect) -> None:
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, surface: pygame.Surface, pe_coords: (float, float), ground_list: list, h_collisions_list: list, scale: int = 30):
+    def __init__(self, surface: pygame.Surface, pe_coords: (float, float), ground_list: list, h_collisions_list: list = None, scale: int = 30):
         """
         Class for the player character
         :param surface: The surface to blit the player to
         :param pe_coords: The starting coordinates for the player
         :param ground_list: The list of rects that the player can collide with (VERTICALLY)
-        :param h_collisions_list: The list of rects that the player can collide with (HORIZONTALLY)
+        :param h_collisions_list: The list of rects that the player can collide with (HORIZONTALLY), defaults to none, and is set to be same as ground rects if not provided
         :param scale: Scale of the image to use
         """
         super(Player, self).__init__()
@@ -53,6 +55,7 @@ class Player(pygame.sprite.Sprite):
         # Movement based attributes
         self.is_moving = False  # Used to control animations
         self.is_grounded = False  # Used to implement gravity
+        self.is_h_collision = False  # Holds weather there is a horizontal collision
         self.horizontal_movement = 0  # Holds the direction of movement
         self.vertical_speed = 0  # Holds the magnitude and direction of movement
         self.GRAVITY = 0.6
@@ -61,7 +64,8 @@ class Player(pygame.sprite.Sprite):
         self.speed = self.SPEED_DEF_VALUE  # Speed value that can be changed
         self.direction = "+"
         self.ground_list = ground_list
-        self.h_collision_rects = h_collisions_list
+        if h_collisions_list: self.h_collision_rects = h_collisions_list
+        else: self.h_collision_rects = self.ground_list
 
     def movement(self) -> None:
         # Find if the player is grounded, and if not add gravity
@@ -75,15 +79,11 @@ class Player(pygame.sprite.Sprite):
             self.vertical_speed += self.GRAVITY
             collided_rects = []
 
-        # TODO: Move the rect up when it intersects with terrain
-
         pressed = pygame.key.get_pressed()
 
         # Boing
         if self.is_grounded and pressed[K_w]:
             self.vertical_speed = self.JUMP_STRENGTH
-
-        # TODO: Implement horizontal collision detection
 
         # Horizontal movement
         if pressed[K_a]:
@@ -95,6 +95,19 @@ class Player(pygame.sprite.Sprite):
         else:
             new_direction = self.direction  # If no movement, keep the current direction
             self.horizontal_movement = 0
+
+        # TODO: Implement horizontal collision detection
+        # Check collisions against all recs used for horizontal collisions
+        for rect in self.h_collision_rects:
+            collision_state = collision_check(self.rect, rect)
+            if collision_state["Left"]:
+                self.is_h_collision = True
+                self.horizontal_movement = 1
+            elif collision_state["Right"]:
+                self.is_h_collision = True
+                self.horizontal_movement = -1
+            else:
+                self.is_h_collision = False
 
         # Determine if image needs to be flipped based on movement direction
         if self.direction != new_direction:
