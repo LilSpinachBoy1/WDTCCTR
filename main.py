@@ -1,10 +1,15 @@
 import Scenes.main_menu
+import Modules.file_handling as fh
 import sys
 import pygame
 pygame.init()
 
-# CREATE WINDOW, FULLSCREEN
+# GET SCREEN DIMENSIONS AND UPDATE USERDATA FILE
 screen_data = pygame.display.get_desktop_sizes()
+fh.Manager().write_settings({"screen_res": screen_data[0]})
+
+
+# CREATE WINDOW, FULLSCREEN
 window = pygame.display.set_mode((screen_data[0]))
 pygame.display.set_caption('How it feels to chew 5 gum')
 

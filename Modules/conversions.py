@@ -12,8 +12,8 @@ screen_data = all_data["screen_res"]
 class Conversions:
     # Get the screen data to keep locally
     def __init__(self):
-        self.screen_width = screen_data[0]
-        self.screen_height = screen_data[1]
+        self.screen_width = int(screen_data[0])
+        self.screen_height = int(screen_data[1])
 
     # Take a pair of coordinates and convert them TO PIXEL VALUES
     def dual_pe_to_pi(self, coords: (float, float)) -> (int, int):

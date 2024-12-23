@@ -8,7 +8,7 @@ SETTINGS = "settings.txt"
 
 
 class Manager:
-    def __init__(self, root: str):
+    def __init__(self, root: str = "UserData/"):
         """
         Create a file manager class that stores all the data needed to access, rather than passing it in every use
         :param root: The file path to the "UserData" folder
