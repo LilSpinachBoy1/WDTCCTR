@@ -93,8 +93,11 @@ class Player(pygame.sprite.Sprite):
         if self.is_grounded and self.pressed[K_w]:
             self.vertical_speed = self.JUMP_STRENGTH
 
-        # Apply coordinate changes
-        self.coords[0] += self.horizontal_movement
+        # Add movement based on speed values
+        if self.is_grounded:
+            self.coords[1] = self.collided_rects[0].top
+        else:
+            self.coords[1] += self.vertical_speed
 
     def h_movement(self):
         if self.pressed[K_a]:
@@ -124,11 +127,8 @@ class Player(pygame.sprite.Sprite):
             self.direction = new_direction
             self.image = pygame.transform.flip(self.image, flip_y=False, flip_x=True)
 
-        # Add movement based on speed values
-        if self.is_grounded:
-            self.coords[1] = self.collided_rects[0].top
-        else:
-            self.coords[1] += self.vertical_speed
+        # Apply coordinate changes
+        self.coords[0] += self.horizontal_movement
 
     def out(self):
         self.pressed = pygame.key.get_pressed()
