@@ -100,16 +100,6 @@ class Player(pygame.sprite.Sprite):
             self.coords[1] += self.vertical_speed
 
     def h_movement(self):
-        if self.pressed[K_a]:
-            self.horizontal_movement = -self.speed
-            new_direction = "-"
-        elif self.pressed[K_d]:
-            self.horizontal_movement = self.speed
-            new_direction = "+"
-        else:
-            new_direction = self.direction  # If no movement, keep the current direction
-            self.horizontal_movement = 0
-
         # Check collisions against all rects used for horizontal collisions
         for rect in self.h_collision_rects:
             collision_state = collision_check(self.rect, rect)
@@ -122,6 +112,19 @@ class Player(pygame.sprite.Sprite):
                 self.is_h_collision = False
         print("---------------------")
 
+        if not self.is_h_collision:
+            if self.pressed[K_a]:
+                self.horizontal_movement = -self.speed
+                new_direction = "-"
+            elif self.pressed[K_d]:
+                self.horizontal_movement = self.speed
+                new_direction = "+"
+            else:
+                new_direction = self.direction  # If no movement, keep the current direction
+                self.horizontal_movement = 0
+        else:
+            new_direction = self.direction
+
         # Determine if image needs to be flipped based on movement direction
         if self.direction != new_direction:
             self.direction = new_direction
@@ -129,6 +132,8 @@ class Player(pygame.sprite.Sprite):
 
         # Apply coordinate changes
         self.coords[0] += self.horizontal_movement
+
+        # TODO: Idea? Check how far into the rect an object is? If slgithly, let it move up, if not, tell it it is stupid and definately shouldnt
 
     def out(self):
         self.pressed = pygame.key.get_pressed()
