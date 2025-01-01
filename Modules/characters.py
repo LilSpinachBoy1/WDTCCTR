@@ -21,7 +21,7 @@ def collision_check(player: pygame.Rect, item: pygame.Rect) -> dict:
 
     # HORIZONTAL COLLISIONS
     # NOTE: These checks only run if the focus is within the y range of the rect, to prevent returning collisions with a rect the player is vertically over or under
-    check_range = range(item.top + 2, item.bottom)  # This plus 2 is just so setting the player to the ground does'nt trigger collisions
+    check_range = range(item.top + 2, item.bottom)  # This plus 2 is just so setting the player to the ground doesn't trigger collisions
     if player.bottom in check_range or player.top in check_range:
         left_collision: bool = player.left < item.right
         right_collision: bool = player.right > item.left
@@ -107,21 +107,17 @@ class Player(pygame.sprite.Sprite):
             new_direction = self.direction  # If no movement, keep the current direction
             self.horizontal_movement = 0
 
-        # Check collisions against all recs used for horizontal collisions
+        # Check collisions against all rects used for horizontal collisions
         for rect in self.h_collision_rects:
             collision_state = collision_check(self.rect, rect)
             print(collision_state)
-            if rect not in self.collided_rects:
-                if collision_state["Left"]:
-                    self.is_h_collision = True
-                    self.horizontal_movement = 1
-                elif collision_state["Right"]:
-                    self.is_h_collision = True
-                    self.horizontal_movement = -1
-                else:
-                    self.is_h_collision = False
-            else: self.is_h_collision = False
-        print("----------------")
+            if collision_state["Left"] or collision_state["Right"]:
+                self.is_h_collision = True
+                self.horizontal_movement = 0  # Stop movement on left or right collision
+                break  # Exit the loop if a collision is detected
+            else:
+                self.is_h_collision = False
+        print("---------------------")
 
         # Determine if image needs to be flipped based on movement direction
         if self.direction != new_direction:
@@ -129,8 +125,10 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, flip_y=False, flip_x=True)
 
         # Add movement based on speed values
-        if self.is_grounded: self.coords[1] = self.collided_rects[0].top
-        else: self.coords[1] += self.vertical_speed
+        if self.is_grounded:
+            self.coords[1] = self.collided_rects[0].top
+        else:
+            self.coords[1] += self.vertical_speed
 
     def out(self):
         self.pressed = pygame.key.get_pressed()
