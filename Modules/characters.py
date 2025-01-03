@@ -105,11 +105,13 @@ class Player(pygame.sprite.Sprite):
                 collision_rect = ground_state["Rect"]
                 break  # Leave the for loop if a collision is found
 
-        # Determine weather the player needs to be moved upwards
+        # Determine weather the player needs to be moved upwards or if gravity should be applied
         if self.is_h_collision and self.is_grounded:
             self.vertical_speed = 0
         elif self.is_grounded:
             set_to_ground(self.rect, collision_rect)
+        else:
+            self.vertical_speed += self.GRAVITY
 
         """ MOVEMENT """
         pressed = pygame.key.get_pressed()  # get the currently pressed keys
@@ -123,6 +125,8 @@ class Player(pygame.sprite.Sprite):
             elif pressed[K_d]:
                 self.horizontal_movement = self.speed
                 new_direction = "+"
+            else:
+                self.horizontal_movement = 0
 
         # Change player direction if necessary
         if self.direction != new_direction:
