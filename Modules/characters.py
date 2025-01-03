@@ -16,8 +16,14 @@ cvt = cons.Conversions()
 
 def collision_check(player: pygame.Rect, item: pygame.Rect) -> dict:
     # VERTICAL COLLISIONS
-    top_collision: bool = player.top > item.bottom
-    bottom_collision: bool = player.bottom > item.top
+    # NOTE: This is relative to the x location of the player, so will only return collisions if the player is within the x range of the rect
+    x_range = range(item.left, item.right)
+    if player.left in x_range or player.right in x_range:
+        top_collision: bool = player.top > item.bottom
+        bottom_collision: bool = player.bottom > item.top
+    else:
+        top_collision: bool = False
+        bottom_collision: bool = False
 
     # HORIZONTAL COLLISIONS
     # NOTE: These checks only run if the focus is within the y range of the rect, to prevent returning collisions with a rect the player is vertically over or under
@@ -78,66 +84,61 @@ class Player(pygame.sprite.Sprite):
         if h_collisions_list: self.h_collision_rects = h_collisions_list
         else: self.h_collision_rects = self.ground_list
 
-    def v_movement(self):
-        # Find if the player is grounded, and if not add gravity
-        collided_indices = self.rect.collidelistall(self.ground_list)
-        if collided_indices:
-            self.is_grounded = True
-            self.vertical_speed = 0
-            self.collided_rects = [self.ground_list[i] for i in collided_indices]
-        else:
-            self.is_grounded = False
-            self.vertical_speed += self.GRAVITY
-            self.collided_rects = []
-        # Boing
-        if self.is_grounded and self.pressed[K_w]:
-            self.vertical_speed = self.JUMP_STRENGTH
-
-        # Add movement based on speed values
-        if self.is_grounded:
-            self.coords[1] = self.collided_rects[0].top
-        else:
-            self.coords[1] += self.vertical_speed
-
-    def h_movement(self):
-        # Check collisions against all rects used for horizontal collisions
+    def movement(self):
+        """ COLLISIONS """
+        # Check horizontal collisions
+        self.is_h_collision = False
         for rect in self.h_collision_rects:
-            collision_state = collision_check(self.rect, rect)
-            print(collision_state)
-            if collision_state["Left"] or collision_state["Right"]:
+            state = collision_check(self.rect, rect)
+            if state["Left"] or state["Right"]:
                 self.is_h_collision = True
-                self.horizontal_movement = 0  # Stop movement on left or right collision
-                break  # Exit the loop if a collision is detected
-            else:
-                self.is_h_collision = False
-        print("---------------------")
+                self.horizontal_movement = -1
+                break  # Leave the for loop if a collision is found
 
+        # Check vertical collisions
+        self.is_grounded = False
+        for rect in self.ground_list:
+            ground_state = collision_check(self.rect, rect)
+            if ground_state["Bottom"]:
+                self.is_grounded = True
+                self.vertical_speed = 0
+                collision_rect = ground_state["Rect"]
+                break  # Leave the for loop if a collision is found
+
+        # Determine weather the player needs to be moved upwards
+        if self.is_h_collision and self.is_grounded:
+            self.vertical_speed = 0
+        else:
+            set_to_ground(self.rect, collision_rect)
+
+        """ MOVEMENT """
+        pressed = pygame.key.get_pressed()  # get the currently pressed keys
+
+        # Only allow horizontal movement if there is no collision
+        new_direction = self.direction
         if not self.is_h_collision:
-            if self.pressed[K_a]:
+            if pressed[K_a]:
                 self.horizontal_movement = -self.speed
                 new_direction = "-"
-            elif self.pressed[K_d]:
+            elif pressed[K_d]:
                 self.horizontal_movement = self.speed
                 new_direction = "+"
-            else:
-                new_direction = self.direction  # If no movement, keep the current direction
-                self.horizontal_movement = 0
-        else:
-            new_direction = self.direction
 
-        # Determine if image needs to be flipped based on movement direction
+        # Change player direction if necessary
         if self.direction != new_direction:
+            self.image = pygame.transform.flip(self.image, True, False)
             self.direction = new_direction
-            self.image = pygame.transform.flip(self.image, flip_y=False, flip_x=True)
 
-        # Apply coordinate changes
+        # Jumping
+        if pressed[K_w] and self.is_grounded:
+            self.vertical_speed += self.JUMP_STRENGTH
+
+        """ ADJUST COORDINATES """
         self.coords[0] += self.horizontal_movement
-
-        # TODO: Idea? Check how far into the rect an object is? If slgithly, let it move up, if not, tell it it is stupid and definately shouldnt
+        self.coords[1] += self.vertical_speed
 
     def out(self):
         self.pressed = pygame.key.get_pressed()
-        self.v_movement()
-        self.h_movement()
+        self.movement()
         self.rect.bottomleft = self.coords
         self.screen.blit(self.image, self.rect)
