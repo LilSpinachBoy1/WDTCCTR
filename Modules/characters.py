@@ -108,7 +108,7 @@ class Player(pygame.sprite.Sprite):
         # Determine weather the player needs to be moved upwards
         if self.is_h_collision and self.is_grounded:
             self.vertical_speed = 0
-        else:
+        elif self.is_grounded:
             set_to_ground(self.rect, collision_rect)
 
         """ MOVEMENT """
