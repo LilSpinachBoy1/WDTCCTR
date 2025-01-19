@@ -28,7 +28,7 @@ def scn0_menu(window) -> bool:
     ground_rect3 = pygame.Rect(coords3, dimensions3)
 
     # Make snel
-    test_snail = chars.Player(window, (35, 20), [ground_rect, ground_rect2, ground_rect3], scale=25)
+    test_snail = chars.Player(window, (35, 20), [ground_rect, ground_rect2, ground_rect3], scale=15)
     # SCENE LOOP
     while running:
         # EVENT LOOP
