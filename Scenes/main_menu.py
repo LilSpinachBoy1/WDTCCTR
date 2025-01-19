@@ -8,7 +8,7 @@ pygame.init()
 
 
 def scn0_menu(window) -> bool:
-    FPS = 60
+    FPS = 120
     clock = pygame.time.Clock()
     running = True
 

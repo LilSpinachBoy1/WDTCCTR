@@ -73,9 +73,9 @@ class Player(pygame.sprite.Sprite):
         self.is_h_collision = False  # Holds weather there is a horizontal collision
         self.horizontal_movement = 0  # Holds the direction of movement
         self.vertical_speed = 0  # Holds the magnitude and direction of movement
-        self.GRAVITY = 0.6
-        self.JUMP_STRENGTH = -20  # This needs to be negative so the character moves upwards
-        self.SPEED_DEF_VALUE = 4  # Default speed value
+        self.GRAVITY = 0.2
+        self.JUMP_STRENGTH = -10  # This needs to be negative so the character moves upwards
+        self.SPEED_DEF_VALUE = 2  # Default speed value
         self.speed = self.SPEED_DEF_VALUE  # Speed value that can be changed
         self.direction = "+"
         self.ground_list = ground_list
@@ -87,6 +87,7 @@ class Player(pygame.sprite.Sprite):
     def movement(self):
         """ COLLISIONS """
         # TODO ISSUE: Bro just wants to climb. He does not give a crap about horizontal collisions
+        # The actual issue here is that when a horizontal collision occurs, it also then triggers a vertical collision because the player is inside the x range of the rect
 
         # Check horizontal collisions
         self.is_h_collision = False
