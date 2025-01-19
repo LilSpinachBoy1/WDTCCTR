@@ -86,13 +86,15 @@ class Player(pygame.sprite.Sprite):
 
     def movement(self):
         """ COLLISIONS """
+        # TODO ISSUE: Bro just wants to climb. He does not give a crap about horizontal collisions
+
         # Check horizontal collisions
         self.is_h_collision = False
         for rect in self.h_collision_rects:
             state = collision_check(self.rect, rect)
-            if state["Left"] or state["Right"]:
+            if state["Right"] or state["Left"]:
                 self.is_h_collision = True
-                self.horizontal_movement = -1
+                self.horizontal_movement = 0
                 break  # Leave the for loop if a collision is found
 
         # Check vertical collisions
@@ -102,15 +104,11 @@ class Player(pygame.sprite.Sprite):
             if ground_state["Bottom"]:
                 self.is_grounded = True
                 self.vertical_speed = 0
-                collision_rect = ground_state["Rect"]
+                self.coords[1] = ground_state["Rect"].top
                 break  # Leave the for loop if a collision is found
 
         # Determine weather the player needs to be moved upwards or if gravity should be applied
-        if self.is_h_collision and self.is_grounded:
-            self.vertical_speed = 0
-        elif self.is_grounded:
-            set_to_ground(self.rect, collision_rect)
-        else:
+        if not self.is_grounded:
             self.vertical_speed += self.GRAVITY
 
         """ MOVEMENT """
