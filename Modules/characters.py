@@ -42,11 +42,6 @@ def collision_check(player: pygame.Rect, item: pygame.Rect) -> dict:
     return collisions
 
 
-# Procedure to set the character rect to the top of the ground rect
-def set_to_ground(focus: pygame.Rect, item: pygame.Rect) -> None:
-    focus.bottom = item.top
-
-
 class Player(pygame.sprite.Sprite):
     def __init__(self, surface: pygame.Surface, pe_coords: (float, float), ground_list: list, h_collisions_list: list = None, scale: int = 30):
         """
@@ -96,6 +91,10 @@ class Player(pygame.sprite.Sprite):
             if state["Right"] or state["Left"]:
                 self.is_h_collision = True
                 self.horizontal_movement = 0
+                if state["Right"]:
+                    self.coords[0] = state["Rect"].left - (self.rect.width + 1)  # Plus 1 to pad and prevent the collision from triggering again
+                elif state["Left"]:
+                    self.coords[0] = state["Rect"].right + 1
                 break  # Leave the for loop if a collision is found
 
         # Check vertical collisions
