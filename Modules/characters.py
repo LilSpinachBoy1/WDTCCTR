@@ -28,7 +28,8 @@ def collision_check(player: pygame.Rect, item: pygame.Rect) -> dict:
     # HORIZONTAL COLLISIONS
     # NOTE: These checks only run if the focus is within the y range of the rect, to prevent returning collisions with a rect the player is vertically over or under
     check_range = range(item.top + 2, item.bottom)  # This plus 2 is just so setting the player to the ground doesn't trigger collisions
-    if player.bottom in check_range or player.top in check_range:
+    is_in_rect = (player.bottom in check_range or player.top in check_range) and (player.left in x_range or player.right in x_range)
+    if is_in_rect:
         left_collision: bool = player.left < item.right
         right_collision: bool = player.right > item.left
     else:
@@ -83,6 +84,7 @@ class Player(pygame.sprite.Sprite):
         """ COLLISIONS """
         # TODO ISSUE: Bro just wants to climb. He does not give a crap about horizontal collisions
         # The actual issue here is that when a horizontal collision occurs, it also then triggers a vertical collision because the player is inside the x range of the rect
+        # At the moment, h-collisions are checked first, so the player is never able to become grounded
 
         # Check horizontal collisions
         self.is_h_collision = False
